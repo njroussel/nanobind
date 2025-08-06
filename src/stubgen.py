@@ -1359,8 +1359,8 @@ def main(args: Optional[List[str]] = None) -> None:
     else:
         patterns = []
 
-    for i in opt.imports:
-        sys.path.insert(0, i)
+    #for i in opt.imports:
+    #    sys.path.insert(0, i)
 
     for i, mod in enumerate(opt.modules):
         if not opt.quiet:
@@ -1368,71 +1368,75 @@ def main(args: Optional[List[str]] = None) -> None:
                 print("\n")
             print('Module "%s" ..' % mod)
             print("  - importing ..")
-        mod_imported = importlib.import_module(mod)
+        #mod_imported = importlib.import_module(mod)
 
-        if opt.output_file:
-            file = Path(opt.output_file)
-        else:
-            file_s = getattr(mod_imported, "__file__", None)
-            if file_s is None:
-                raise Exception(
-                    'the module lacks a "__file__" attribute, hence '
-                    "stubgen cannot infer where to place the generated "
-                    "stub. You must specify the -o parameter to provide "
-                    "the name of an output file."
-                )
-            file = Path(str(file_s))
+        file = Path(opt.output_file)
 
-            ext_loader = importlib.machinery.ExtensionFileLoader
-            if isinstance(mod_imported.__loader__, ext_loader):
-                # Splitting on "." (module nesting qualifier) handles the case
-                # of invoking stubgen on a module that's not in the current
-                # working directory - in that case, we still only want the Python
-                # module name as the stub file name, not the whole source tree
-                # hierarchy.
-                modname = mod_imported.__name__.split(".")[-1]
-                file = file.with_name(modname)
-            file = file.with_suffix(".pyi")
+        #if opt.output_file:
+        #    file = Path(opt.output_file)
+        #else:
+        #    file_s = getattr(mod_imported, "__file__", None)
+        #    if file_s is None:
+        #        raise Exception(
+        #            'the module lacks a "__file__" attribute, hence '
+        #            "stubgen cannot infer where to place the generated "
+        #            "stub. You must specify the -o parameter to provide "
+        #            "the name of an output file."
+        #        )
+        #    file = Path(str(file_s))
 
-            if opt.output_dir:
-                file = Path(opt.output_dir, file.name)
+        #    ext_loader = importlib.machinery.ExtensionFileLoader
+        #    if isinstance(mod_imported.__loader__, ext_loader):
+        #        # Splitting on "." (module nesting qualifier) handles the case
+        #        # of invoking stubgen on a module that's not in the current
+        #        # working directory - in that case, we still only want the Python
+        #        # module name as the stub file name, not the whole source tree
+        #        # hierarchy.
+        #        modname = mod_imported.__name__.split(".")[-1]
+        #        file = file.with_name(modname)
+        #    file = file.with_suffix(".pyi")
+
+        #    if opt.output_dir:
+        #        file = Path(opt.output_dir, file.name)
 
         file.parents[0].mkdir(parents=True, exist_ok=True)
 
-        sg = StubGen(
-            module=mod_imported,
-            quiet=opt.quiet,
-            recursive=opt.recursive,
-            include_docstrings=opt.include_docstrings,
-            include_private=opt.include_private,
-            patterns=patterns,
-            output_file=file
-        )
+        #sg = StubGen(
+        #    module=mod_imported,
+        #    quiet=opt.quiet,
+        #    recursive=opt.recursive,
+        #    include_docstrings=opt.include_docstrings,
+        #    include_private=opt.include_private,
+        #    patterns=patterns,
+        #    output_file=file
+        #)
 
-        if not opt.quiet:
-            print("  - analyzing ..")
+        #if not opt.quiet:
+        #    print("  - analyzing ..")
 
-        sg.put(mod_imported)
+        #sg.put(mod_imported)
 
-        if patterns:
-            total_matches = 0
-            for p in patterns:
-                if p.matches != 0:
-                    total_matches += p.matches
-                    continue
-                rule_str = str(p.query)
-                if "re.compile" in rule_str:
-                    rule_str = rule_str.replace("re.compile(", "")[:-1]
-                if not opt.quiet:
-                    print(f"  - warning: rule {rule_str} did not match any elements.")
-            if not opt.quiet:
-                print(f"  - applied {total_matches} patterns.")
+        #if patterns:
+        #    total_matches = 0
+        #    for p in patterns:
+        #        if p.matches != 0:
+        #            total_matches += p.matches
+        #            continue
+        #        rule_str = str(p.query)
+        #        if "re.compile" in rule_str:
+        #            rule_str = rule_str.replace("re.compile(", "")[:-1]
+        #        if not opt.quiet:
+        #            print(f"  - warning: rule {rule_str} did not match any elements.")
+        #    if not opt.quiet:
+        #        print(f"  - applied {total_matches} patterns.")
 
-        if not opt.quiet:
-            print(f'  - writing stub "{file}" ..')
+        #if not opt.quiet:
+        #    print(f'  - writing stub "{file}" ..')
 
+        #with open(file, "w", encoding='utf-8') as f:
+        #    f.write(sg.get())
         with open(file, "w", encoding='utf-8') as f:
-            f.write(sg.get())
+            f.write("")
 
     if opt.marker_file:
         if not opt.quiet:
