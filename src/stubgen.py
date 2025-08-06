@@ -1438,7 +1438,10 @@ def main(args: Optional[List[str]] = None) -> None:
         if not opt.quiet:
             print(f'  - writing marker file "{opt.marker_file}" ..')
         Path(opt.marker_file).touch()
+        if not opt.quiet:
+            print('wrote marker file')
 
 
 if __name__ == "__main__":
     main()
+    print('DONEDONEDONE')
